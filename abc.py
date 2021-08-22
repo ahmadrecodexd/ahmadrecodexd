@@ -20,7 +20,7 @@ cp=[]
 ok=[]
 def back():
     input(W+"["+warna+" Press Enter To Back "+W+"]")
-    os.system('python mbf.py')
+    os.system('python abc.py')
 def baner():
     os.system("cls" if os.name == "nt" else "clear")
     print(f"""   
